@@ -28,4 +28,4 @@ Add this repository as a plugin source in StashApp:
 3. Enter:
    - **Name**: stashInteractive
    - **URL**: `https://rosverando.github.io/stashButtplugRestim/main/index.yml`
-4. install the **stashButtplug** and **stashVR** plugin from the **Available** tab.
+4. install the **stashButtplugRestim** plugin from the **Available** tab.
