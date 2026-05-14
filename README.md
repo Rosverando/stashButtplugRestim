@@ -18,3 +18,14 @@ Has the following config options:
 latency: Adjust timing synchronization (negative to have actions play earlier)
 - **skipButtplug**: Wether you want to skip Buttplug and send straight Tcode to Server URL
 - **expandAxis**: Only needed for restim if you skip Buttplug and send Tcode straight to restim. Will use the same Math that Restim uses to "generate beta axis"
+
+## Installation
+
+Add this repository as a plugin source in StashApp:
+
+1. Go to **Settings > Plugins**.
+2. Click **Sources** -> **Add Source**.
+3. Enter:
+   - **Name**: stashInteractive
+   - **URL**: `https://rosverando.github.io/stashButtplugRestim/main/index.yml`
+4. install the **stashButtplug** and **stashVR** plugin from the **Available** tab.
