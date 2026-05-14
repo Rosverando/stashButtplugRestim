@@ -1,24 +1,20 @@
-# Template for creating Stash plugins source index
+# stashButtplugRestim
 
-This template allows you to create a new repository with a few clicks with preconfigured GitHub action to publish your plugins source index. 
-_This assumes you already know how to create plugins for Stash. If you don't, first read [this](https://docs.stashapp.cc/in-app-manual/plugins/#creating-plugins)._
+  
 
-## How to use it?
+A plugin to connect stashApp to Buttplugio. (Only supports linear devices currently)
 
-1. Click **Use this template** > **Create a new repository**. 
-1. Choose a repository name and click **Create repository**.
-1. Open **Settings** and head to **Pages**.
-1. Under Build and deployment select the Source as GitHub Actions.
+Unlike <a  href="https://github.com/happykinkster/stashInteractive">happykinksters</a> plugin, this uses positionWithDuration.
 
-Now add your plugins to [plugins](/plugins) directory and they will be automatically published to the source index.
+This was done because what i use (restim) expects a position with a duration over which to move to it, instead of getting sent interpolated position updates that expect the device to move instantly
 
-Source index URL: [`https://<your-username>.github.io/<repository-name>/main/index.yml`](https://<your-username>.github.io/<repository-name>/main/index.yml)
 
-## Share your plugins
+This plugin can also be used to send raw Tcode to any websocket server
 
-- [Create a new topic](https://discourse.stashapp.cc/t/-/33) for your plugin on the community forum.
-- [Add your source index to the list](https://discourse.stashapp.cc/t/-/122) on the Stash community forum.
 
-## License
+Has the following config options:
 
-The default license is set to [AGPL-3.0](/LICENCE). Before publishing any plugins you can change it.
+- **serverUrl**: The address of your Intiface Central server (e.g. http://127.0.0.1:12345) (or restim if you want to skip buttplug, in which case the url should be something like ws://localhost:12346/tcode)
+latency: Adjust timing synchronization (negative to have actions play earlier)
+- **skipButtplug**: Wether you want to skip Buttplug and send straight Tcode to Server URL
+- **expandAxis**: Only needed for restim if you skip Buttplug and send Tcode straight to restim. Will use the same Math that Restim uses to "generate beta axis"
