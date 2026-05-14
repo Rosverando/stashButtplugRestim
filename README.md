@@ -26,6 +26,6 @@ Add this repository as a plugin source in StashApp:
 1. Go to **Settings > Plugins**.
 2. Click **Sources** -> **Add Source**.
 3. Enter:
-   - **Name**: stashInteractive
+   - **Name**: stashButtplugRestim
    - **URL**: `https://rosverando.github.io/stashButtplugRestim/main/index.yml`
 4. install the **stashButtplugRestim** plugin from the **Available** tab.
