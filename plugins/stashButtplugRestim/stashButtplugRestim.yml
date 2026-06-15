@@ -24,7 +24,7 @@ settings:
   serverUrl:
     type: STRING
     displayName: Server URL
-    description: The address of your Intiface Central server (e.g. http://127.0.0.1:12345) (or restim if you want to skip buttplug, in which case the url should be something like ws://localhost:12346/tcode)
+    description: The address of your websocket server. Most Likely Intiface Central (e.g. ws://127.0.0.1:12345). In case you are using Restim and want to skip buttplug the url should be something like ws://localhost:12346/tcode)
   latency:
     type: NUMBER
     displayName: Latency (ms)
