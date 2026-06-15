@@ -14,8 +14,8 @@ This plugin can also be used to send raw Tcode to any websocket server
 
 Has the following config options:
 
-- **serverUrl**: The address of your Intiface Central server (e.g. http://127.0.0.1:12345) (or restim if you want to skip buttplug, in which case the url should be something like ws://localhost:12346/tcode)
-- **latency**: Adjust timing synchronization (negative to have actions play earlier)
+- **serverUrl**: The address of your websocket server. Most Likely Intiface Central (e.g. ws://127.0.0.1:12345). In case you are using Restim and want to skip buttplug the url should be something like ws://localhost:12346/tcode)
+- **latency**: Adjust timing synchronization in ms (negative to have actions play earlier)
 - **skipButtplug**: Wether you want to skip Buttplug and send straight Tcode to Server URL
 - **cumHotkey**: Wether you want script playback to pause when pressing <PAUSE> on your keyboard (video will not pause)
 - **cumHotkeyPosition**: The Position you want the device to home to when pressing <PAUSE>, only neede if using cumHotKey
