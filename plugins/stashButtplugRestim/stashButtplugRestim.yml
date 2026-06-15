@@ -38,6 +38,6 @@ settings:
     displayName:  Cum Hotkey Position
     description: The Position (0-100) the Device will go to when pressing the Cum Hotkey
   bugfix:
-  type: BOOLEAN
+    type: BOOLEAN
     displayName: bugfix
     description: Bugfix for Buttplugs wrong tcode max, limits stroke to 0-99, will be removed once Buttplug fixes it on their end
