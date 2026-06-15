@@ -2,51 +2,24 @@
     const self = this;
     self.buttplugjs = await import('https://cdn.jsdelivr.net/npm/buttplug@4.0.1/dist/web/buttplug.mjs');
     
-  //ported from restim py
-class FunscriptExpander {
-  constructor() {
-    this.alpha = 0;
-  }
-
-    expand(value, interval) {
-        if (interval < 10) {
-            return { intervals: [0], alpha: [value * 2 - 1], beta: [0] };
+    //add event listener for PAUSE key and keep track of if we should be transmitting funscript right now
+    //evaluation at sending time depends on if setting cumHotkey is true/false
+    document.addEventListener('keydown', (e) => {
+        if(e.key!=="Pause"){return}
+        if(!self.settings.cumHotkey){return}
+        self.cumPaused = !self.cumPaused
+        console.log("newPuased",self.cumPaused)
+        //if we are newly paused, send goto 0 in 0ms
+        if(self.cumPaused){
+                
+            if(self.settings.skipButtplug){
+                this.websocket.send("L0" + String(self.settings.cumHotkeyPosition).padStart(3, '0') + "I" + 0)
+            }else{
+                self.device.runOutput(self.buttplugjs.DeviceOutput.PositionWithDuration.percent(self.settings.cumHotkeyPosition/100, 1))
+            }
+            
         }
-
-        const alphaStart = this.alpha;
-        const alphaEnd = value * 2 - 1;
-        const duration = interval;
-        const center = (alphaStart + alphaEnd) / 2;
-        const radius = Math.abs(center - alphaStart);
-
-        const n = Math.max(2, Math.floor(duration / 10));
-
-        const intervals = linspace(0, interval, n);
-        const theta = linspace(0, Math.PI, n);
-
-        let beta = theta.map(t => radius * Math.sin(t));
-        let alpha = theta.map(t => center + radius * Math.cos(t));
-
-        if (alphaStart < alphaEnd) {
-            beta = beta.map(b => -b);
-            alpha = alpha.map(a => center - (a - center));
-        }
-
-        this.alpha = alphaEnd;
-        return { intervals, alpha, beta };
-    }
-
-    reset() {
-        this.alpha = 0;
-    }
-}
-
-function linspace(start, end, n) {
-  if (n === 1) return [start];
-  return Array.from({ length: n }, (_, i) => start + (end - start) * (i / (n - 1)));
-}
-
-
+    });
 
     let currentLoop = null
     //abortable sleep
@@ -66,11 +39,7 @@ function linspace(start, end, n) {
 
         //might be needed for restim expansion
         const timeouts = []
-
-        //we need a new one each time we play, since it relies on having a reference to the last action internally
-        if(self.settings.expandAxis){
-            self.FunscriptExpander = new FunscriptExpander();
-        }
+        
 
         //in case we are already running a funscript loop
         if (currentLoop) currentLoop.abort()
@@ -133,50 +102,17 @@ function linspace(start, end, n) {
             
             //dummy placeholder
             if(!self.settings.skipButtplug){
-                self.device.runOutput(self.buttplugjs.DeviceOutput.PositionWithDuration.percent(pos/100, realDur))
-            }else if(self.settings.skipButtplug){
-
-                //cut the funscriptexpander out of restim code
-                //restimsend(pos,realDur,L0)
-                //restimsend(pos,realDur,L1)
-                console.log(pos)
-                if(!self.settings.expandAxis){
-                    const mappedPos = Math.round(pos * 9.99);
-                    this.websocket.send("L0" + String(mappedPos).padStart(3, '0') + "I" + realDur)                
-                } else {
-                    timeouts.forEach(id => clearTimeout(id));
-                    timeouts.length = 0;
-
-                    const toRange = v => Math.min(999, Math.max(0, Math.round((v + 1) / 2 * 999)));
-                    const expanded = self.FunscriptExpander.expand(pos / 100, realDur);
-
-                    const expansionOrigin = performance.now();
-                    let j = 0;
-
-                    function sendNext() {
-                        if (j >= expanded.intervals.length) return;
-
-                        const aVal = toRange(expanded.alpha[j]);
-                        const bVal = toRange(expanded.beta[j]);
-                        const nextOffset = j < expanded.intervals.length - 1 ? expanded.intervals[j + 1] : expanded.intervals[j];
-                        const dur = Math.round(nextOffset - expanded.intervals[j]);
-
-                        const aStr = String(aVal).padStart(3, '0');
-                        const bStr = String(bVal).padStart(3, '0');
-                        self.websocket.send(`L0${aStr}I${dur} L1${bStr}I${dur}\n`);
-
-                        j++;
-                        if (j < expanded.intervals.length) {
-                            const elapsed = performance.now() - expansionOrigin;
-                            const nextDelay = expanded.intervals[j] - elapsed;
-                            const id = setTimeout(sendNext, Math.max(0, nextDelay));
-                            timeouts.push(id);
-                        }
+                if(self.settings.cumHotkey){
+                    if(!self.cumPaused){
+                        self.device.runOutput(self.buttplugjs.DeviceOutput.PositionWithDuration.percent(pos/100, realDur))
                     }
-
-                    const id = setTimeout(sendNext, 0);
-                    timeouts.push(id);
+                }else{
+                    self.device.runOutput(self.buttplugjs.DeviceOutput.PositionWithDuration.percent(pos/100, realDur))
                 }
+                
+            }else if(self.settings.skipButtplug){
+                const mappedPos = Math.round(pos * 9.99);
+                this.websocket.send("L0" + String(mappedPos).padStart(3, '0') + "I" + realDur)                
             }
 
             lastAt = nextAt
@@ -186,12 +122,8 @@ function linspace(start, end, n) {
             try {
                 await sleep(realDur, controller.signal)
             } catch (e) {
-                if(self.settings.skipButtplug && self.settings.expandAxis)
-                timeouts.forEach(id => clearTimeout(id))
                 break
-            }
-
-            
+            }   
         }
     }
 

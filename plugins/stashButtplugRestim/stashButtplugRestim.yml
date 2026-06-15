@@ -17,10 +17,6 @@ ui:
       - "*"
 
 settings:
-  expandAxis:
-    type: BOOLEAN
-    displayName: Generate Beta Axis for Restim
-    description: Only needed if you skip Buttplug and send Tcode, will use the same Math that Restim uses to "generate beta axis"
   skipButtplug:
     type: BOOLEAN
     displayName: Direct Tcode
@@ -33,3 +29,11 @@ settings:
     type: NUMBER
     displayName: Latency (ms)
     description: Adjust timing synchronization (negative to have actions play earlier)
+  cumHotkey:
+    type: BOOLEAN
+    displayName: Cum Hotkey
+    description: When pressing PAUSE on the keyboard, script playback will be stopped and a final command to got to <Cum Hotkey Position> in 0ms will be sent. To resume script playback, press PAUSE again.
+  cumHotkeyPosition:
+    type: NUMBER
+    displayName:  Cum Hotkey Position
+    description: The Position (0-100) the Device will go to when pressing the Cum Hotkey
