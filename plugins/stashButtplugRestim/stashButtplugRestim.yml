@@ -29,6 +29,10 @@ settings:
     type: NUMBER
     displayName: Latency (ms)
     description: Adjust timing synchronization (negative to have actions play earlier)
+  invert:
+    type: BOOLEAN
+    displayName: Invert Position
+    description: Inverts the position, 0 is now 100 and 100 is now 0
   cumHotkey:
     type: BOOLEAN
     displayName: Cum Hotkey

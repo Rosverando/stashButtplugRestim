@@ -17,7 +17,8 @@
             }else{
                 let homePos = self.settings.cumHotkeyPosition
                 if(self.settings.bugfix){
-                    homePos = homePos/1000*999
+                    
+                    homePos = homePos/100*0.999
                 }
                 self.device.runOutput(self.buttplugjs.DeviceOutput.PositionWithDuration.percent(self.settings.cumHotkeyPosition/100, 1))
             }
@@ -37,9 +38,7 @@
         })
     }
 
-    async function funscriptLoop(playAt,delay,startVideo,speed){
-        //needed so we can autostart video after we are truly ready
-        let videoStarted = false
+    async function funscriptLoop(playAt,delay,speed){
 
         //might be needed for restim expansion
         const timeouts = []
@@ -85,11 +84,8 @@
             let action = self.funscript[i]
             let nextAt = action["at"] //int 0-100
             let pos = action["pos"] //millis
-
-
-            if(startVideo && !videoStarted){
-                videoStarted = true
-                PluginApi.player.play()
+            if(self.settings.invert){
+                pos=100-pos
             }
 
             //we should now be between two actions
@@ -108,10 +104,8 @@
             if(!self.settings.skipButtplug){
                 if(self.settings.cumHotkey){
                     if(!self.cumPaused){
-
-
                         if(self.settings.bugfix){
-                            self.device.runOutput(self.buttplugjs.DeviceOutput.PositionWithDuration.percent(pos*10/999, realDur))
+                            self.device.runOutput(self.buttplugjs.DeviceOutput.PositionWithDuration.percent(pos/100*0.999, realDur))
                         }else{
                             self.device.runOutput(self.buttplugjs.DeviceOutput.PositionWithDuration.percent(pos/100, realDur))
                         }
@@ -186,7 +180,7 @@
 
     function handlePlay(e) {
         console.log("play")
-        funscriptLoop(PluginApi.player.currentTime(),self.settings.latency,true)
+        funscriptLoop(PluginApi.player.currentTime(),self.settings.latency)
     }
 
     function handleWaiting(e) {
@@ -204,10 +198,6 @@
         //not yet implemented
         //might be able to change rate live without pausing eventually
         //lets not tho, that sounds like ass to implement
-        return
-
-        PluginApi.player.pause()
-        let newRate = PluginApi.player.playbackRate()
     }
 
     async function init() {
@@ -251,20 +241,20 @@
         handlePlay()
     }
 
-    PluginApi.Event.addEventListener("stash:location", waitForPlayer)
+    PluginApi.Event.addEventListener("stash:location", ()=>{waitForPlayer(init)})
     //so we stop playing when we switch to e.g scenes where no video player is present
     //side effect that if you open a new tab, playback gets stopped for funscript only (fine imo)
     PluginApi.Event.addEventListener("stash:location", handlePause)
     //inital init in case of page reload
-    waitForPlayer
+    waitForPlayer(init)
 })();
 
 
-function waitForPlayer() {
+function waitForPlayer(callbackMethod) {
     var player = document.querySelector("video-js");
     if (player){
-         init();
+         callbackMethod();
          return
     }
-    setTimeout(waitForPlayer, 100);
+    setTimeout(waitForPlayer, 100,callbackMethod);
 }
