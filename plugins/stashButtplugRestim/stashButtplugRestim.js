@@ -251,10 +251,20 @@
         handlePlay()
     }
 
-    PluginApi.Event.addEventListener("stash:location", () => wfke("video-js", init))
+    PluginApi.Event.addEventListener("stash:location", waitForPlayer)
     //so we stop playing when we switch to e.g scenes where no video player is present
     //side effect that if you open a new tab, playback gets stopped for funscript only (fine imo)
     PluginApi.Event.addEventListener("stash:location", handlePause)
     //inital init in case of page reload
-    wfke("video-js", init)
+    waitForPlayer
 })();
+
+
+function waitForPlayer() {
+    var player = document.querySelector("video-js");
+    if (player){
+         init();
+         return
+    }
+    setTimeout(waitForPlayer, 100);
+}
