@@ -18,7 +18,7 @@ Has the following config options:
 - **latency**: Adjust timing synchronization in ms (negative to have actions play earlier)
 - **skipButtplug**: Wether you want to skip Buttplug and send straight Tcode to Server URL
 - **cumHotkey**: Wether you want script playback to pause when pressing PAUSE on your keyboard (video will not pause)
-- **cumHotkeyPosition**: The Position you want the device to home to when pressing PAUSE, only neede if using cumHotKey
+- **cumHotkeyPosition**: The Position you want the device to home to when pressing PAUSE, only needed if using cumHotKey
 
 
 ## Installation
