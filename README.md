@@ -17,8 +17,8 @@ Has the following config options:
 - **serverUrl**: The address of your websocket server. Most Likely Intiface Central (e.g. ws://127.0.0.1:12345). In case you are using Restim and want to skip buttplug the url should be something like ws://localhost:12346/tcode)
 - **latency**: Adjust timing synchronization in ms (negative to have actions play earlier)
 - **skipButtplug**: Wether you want to skip Buttplug and send straight Tcode to Server URL
-- **cumHotkey**: Wether you want script playback to pause when pressing <PAUSE> on your keyboard (video will not pause)
-- **cumHotkeyPosition**: The Position you want the device to home to when pressing <PAUSE>, only neede if using cumHotKey
+- **cumHotkey**: Wether you want script playback to pause when pressing PAUSE on your keyboard (video will not pause)
+- **cumHotkeyPosition**: The Position you want the device to home to when pressing PAUSE, only needed if using cumHotKey
 
 
 ## Installation
