@@ -16,10 +16,6 @@
                 this.websocket.send("L0" + String(self.settings.cumHotkeyPosition).padStart(3, '0') + "I" + 0)
             }else{
                 let homePos = self.settings.cumHotkeyPosition
-                if(self.settings.bugfix){
-                    
-                    homePos = homePos/100*0.999
-                }
                 self.device.runOutput(self.buttplugjs.DeviceOutput.PositionWithDuration.percent(self.settings.cumHotkeyPosition/100, 1))
             }
             
@@ -104,12 +100,7 @@
             if(!self.settings.skipButtplug){
                 if(self.settings.cumHotkey){
                     if(!self.cumPaused){
-                        if(self.settings.bugfix){
-                            self.device.runOutput(self.buttplugjs.DeviceOutput.PositionWithDuration.percent(pos/100*0.999, realDur))
-                        }else{
                             self.device.runOutput(self.buttplugjs.DeviceOutput.PositionWithDuration.percent(pos/100, realDur))
-                        }
-                        
                     }
                 }else{
                     self.device.runOutput(self.buttplugjs.DeviceOutput.PositionWithDuration.percent(pos/100, realDur))
